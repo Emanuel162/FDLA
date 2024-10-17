@@ -1,0 +1,19 @@
+label {
+    display: block;
+    margin: 0.25rem 0;
+}
+
+button {
+    display: block;
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+}
+
+input {
+    border: 2px solid black;
+    border-radius: 0.5rem;
+}
+
+fieldset {
+    width: fit-content;
+}
