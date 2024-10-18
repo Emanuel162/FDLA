@@ -3,7 +3,7 @@ const createXML = (atomFeedData) => {
     document.getElementById('atomOutput').textContent = `
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <title>Das ist mein Feed zum FDLA Kurs</title>
+    <title>My Atom Feed for FDLA</title>
     <link href="https://ilias.uni-koeln.de/ilias/goto_uk_crs_5913385.html" />
     <updated>${new Date().toISOString()}</updated>
     <author>
@@ -44,6 +44,17 @@ const createAtomFeed = () => {
 
     createXML(atomFeedData);
 }
+
+
+
+const initializeAtomfeed = () => {
+    //do sth
+}
+
+//evtl lieber DOMContentLoaded, wenn andere Sachen noch nicht geladen sind
+window.addEventListener('load', initializeAtomfeed)
+
+
 
 // ------------------------------ OLD ------------------------------
 
