@@ -17,6 +17,7 @@ const getEntryData = () => {
 const addEntryToFeed = (entryData) => {
     const entryXml = `    <entry>
         <title>${entryData.title}</title>
+        <author>${entryData.author}</author>
         <link href="${entryData.link}"/>
         <id>${entryData.link}</id>
         <updated>${new Date().toISOString()}</updated>
@@ -48,3 +49,16 @@ const initializeAtomfeed = () => {
 
 //after loading the DOM the atom feed is initiated once
 window.addEventListener('DOMContentLoaded', initializeAtomfeed);
+
+const saveAtomFeedInSessionStorage = () => {
+    
+    let atomFeedCounter = sessionStorage.getItem("atomFeedCounter");
+    if(atomFeedCounter == null) {
+        atomFeedCounter = 0;
+    }
+    atomFeedCounter++;
+    const atomFeedStorageName = "AtomFeed" + atomFeedCounter;
+    sessionStorage.setItem(atomFeedStorageName, JSON.stringify(atomFeed));
+    sessionStorage.setItem("atomFeedCounter", atomFeedCounter);
+    initializeAtomfeed();
+}
