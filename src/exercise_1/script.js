@@ -1,88 +1,50 @@
+let atomFeed = "";
 
-const createXML = (atomFeedData) => {
-    document.getElementById('atomOutput').textContent = `
+const createAtomFeed = () => {
+    atomFeed = addEntryToFeed(getEntryData());
+}
+
+const getEntryData = () => {
+    return {
+        author: document.getElementById("author").value,
+        title: document.getElementById("title").value,
+        link: document.getElementById("link").value,
+        description: document.getElementById("description").value,
+    }
+}
+
+// add entry with given data to the atom feed
+const addEntryToFeed = (entryData) => {
+    const entryXml = `    <entry>
+        <title>${entryData.title}</title>
+        <link href="${entryData.link}"/>
+        <id>${entryData.link}</id>
+        <updated>${new Date().toISOString()}</updated>
+        <summary>${entryData.description}</summary>
+    </entry>
+`;
+    const firstPartAtomFeed = atomFeed.split('</feed>')[0];
+    const newAtomFeed = firstPartAtomFeed + entryXml + `</feed>`;
+    document.getElementById('atomOutput').textContent = newAtomFeed;
+    return newAtomFeed;
+}
+
+//create empty atom feed
+const initializeAtomfeed = () => {
+    atomFeed = `
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>My Atom Feed for FDLA</title>
     <link href="https://ilias.uni-koeln.de/ilias/goto_uk_crs_5913385.html" />
     <updated>${new Date().toISOString()}</updated>
     <author>
-        <name>Emanuel</name>
+        <name>Emanuel and Paa Kofi</name>
     </author>
-    <id>${atomFeedData.link}</id>
-    
-    <entry>
-        <title>${atomFeedData.title}</title>
-        <link href="${atomFeedData.link}" />
-        <id>${atomFeedData.link}</id>
-        <updated>${new Date().toISOString()}</updated>
-        <summary>${atomFeedData.description}</summary>
-    </entry>
+    <id>https://ilias.uni-koeln.de/ilias/goto_uk_crs_5913385.html${new Date().toISOString()}</id>
 </feed>
-    `;
+    `
+    document.getElementById('atomOutput').textContent = atomFeed;
 }
 
-const createAtomFeed = () => {
-    const author = document.getElementById("author").value;
-    const title = document.getElementById("title").value;
-    const link = document.getElementById("link").value;
-    const description = document.getElementById("description").value;
-    
-    const atomFeedData = {
-        author: author,
-        title: title,
-        link: link,
-        description: description,
-    }
-    
-    let list = JSON.parse(sessionStorage.getItem("atomFeedDataList"));
-    if(list == null) {
-        list = [];
-    }
-    list.push(atomFeedData);
-    sessionStorage.setItem("atomFeedDataList", JSON.stringify(list));
-
-    createXML(atomFeedData);
-}
-
-
-
-const initializeAtomfeed = () => {
-    //do sth
-}
-
-//evtl lieber DOMContentLoaded, wenn andere Sachen noch nicht geladen sind
-window.addEventListener('load', initializeAtomfeed)
-
-
-
-// ------------------------------ OLD ------------------------------
-
-let linkform = document.getElementById("linkForm");
-
-linkform.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const link = document.getElementById("link").value;
-    let list = JSON.parse(sessionStorage.getItem("Linkliste"));
-    if(list == null) {
-        list = [];
-    }
-    if(link.length > 0 && !list.includes(link)) {
-        list.push(link);
-    }
-    sessionStorage.setItem("Linkliste", JSON.stringify(list));
-    createUnorderedList(list);
-})
-
-const createUnorderedList = (list) => {
-    const div = document.getElementById("linklist");
-    div.innerHTML = "";
-
-    const ul = document.createElement("ul");
-    list.forEach((item) => {
-        const listItem = document.createElement("li");
-        listItem.innerText = item;
-        ul.appendChild(listItem);
-    })
-    div.appendChild(ul);
-}
+//after loading the DOM the atom feed is initiated once
+window.addEventListener('DOMContentLoaded', initializeAtomfeed);
